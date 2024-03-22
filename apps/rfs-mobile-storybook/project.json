@@ -1,0 +1,61 @@
+{
+  "name": "rfs-mobile-storybook",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/rfs-mobile-storybook/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/rfs-mobile-storybook",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/rfs-mobile-storybook/src/main.ts",
+        "tsConfig": "apps/rfs-mobile-storybook/tsconfig.app.json",
+        "assets": ["apps/rfs-mobile-storybook/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "generateLockfile": true,
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "rfs-mobile-storybook:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "rfs-mobile-storybook:build:development"
+        },
+        "production": {
+          "buildTarget": "rfs-mobile-storybook:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/rfs-mobile-storybook/Dockerfile . -t rfs-mobile-storybook"
+    }
+  },
+  "tags": []
+}
